@@ -17,7 +17,8 @@ endif
 
 #C++ source files
 CPPSRCS = main.cpp \
-			help.cpp
+			help.cpp \
+			comm.cpp
 
 
 #C++ object files			

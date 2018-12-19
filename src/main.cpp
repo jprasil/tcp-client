@@ -25,14 +25,16 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 
 #include "help.h"
+#include "comm.h"
 
 //--------------------------------------------------
 //! Max number of characters of input argument
 #define MAX_ARG_LEN 20
-#define BUFF_SIZE	100
+//#define BUFF_SIZE	100
 
 using namespace std;
 
@@ -67,7 +69,58 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		char tmpBuff[BUFF_SIZE];
+		char buffer[BUFF_SIZE];
+		string tmpStr;
+		servAddr.sin_family = AF_INET;
+
+		// Read address
+		tmpStr = argMap.at("-a");
+		strcpy(buffer, tmpStr.c_str());
+		if(inet_pton(AF_INET, buffer, &servAddr.sin_addr) <= 0)
+		{
+			if(inet_pton(AF_INET, "127.0.0.1", &servAddr.sin_addr) <= 0)
+			{
+				HandleError("inet_pton() error");
+			}
+		}
+
+		// Read port
+		tmpStr = argMap.at("-p");
+		strcpy(buffer, tmpStr.c_str());
+		servAddr.sin_port = htons(atoi(buffer));
+
+		// Create TCP socket
+		int sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		if(sockfd == -1)
+		{
+			HandleError("socket() error");
+		}
+
+		// Connect to server
+		if(connect(sockfd, reinterpret_cast<sockaddr*>(&servAddr), sizeof(servAddr)) == -1)
+		{
+			HandleError("connect() error");
+		}
+
+		// Connection OK - read request
+		tmpStr = argMap.at("-r");
+		StringToLowercase(tmpStr);
+		strcpy(buffer, tmpStr.c_str());
+
+
+		int len = ClientComm(sockfd, buffer);
+
+		DebugMessage("Receive complete, data: %s length: %d", buffer, len);
+
+		if(fcntl(sockfd, F_GETFD) != -1 || errno != EBADF)
+		{
+			if(close(sockfd) == -1)
+			DebugMessage("Error during socket closing: %s", strerror(errno));
+		}
+
+		DebugMessage("Client finished");
+
+/*		char tmpBuff[BUFF_SIZE];
 		string tmpStr;
 		servAddr.sin_family = AF_INET;
 
@@ -146,6 +199,7 @@ int main(int argc, char* argv[])
 
 			DebugMessage("Client finished");
 		}
+		*/
 	}
 }
 
