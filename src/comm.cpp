@@ -1,9 +1,18 @@
+//---------------------------------------------------
 /*
- * comm.cpp
- *
- *  Created on: Nov 18, 2018
- *      Author: root
- */
+ 	\file		comm.cpp
+
+ 	\brief		This module defines communication
+ 				messages based on TCP protocol
+
+	\date		25.10.2018
+	\version	1.0
+
+	\author		Bc. Jan Prasil
+
+	\note		Implements ClientComm() only
+*/
+//---------------------------------------------------
 
 #include "comm.h"
 #include "help.h"

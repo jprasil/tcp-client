@@ -29,10 +29,10 @@ using namespace std;
 void PrintHelp()
 {
 	cout << endl;
-	cout << "tcp_client [options] -r" << endl << endl;
+	cout << "tcp_client [options]" << endl << endl;
 	cout << "Options:" << endl;
 	cout << "-a       Server address (default is 127.0.0.1)" << endl;
-	cout << "-p       Server listening port (default is 5001)" << endl;
+	cout << "-p       Server listening port" << endl;
 	cout << "-r       Type of request, may be used: cpu, mem" << endl << endl;
 	cout << "--help   Print this help" << endl << endl;
 }

@@ -6,9 +6,9 @@
  				command line.
 
  	\note		Syntax for execute tcp_client:
- 				tcp_client [-a address][-p port] -r request
+ 				tcp_client [-a address]-p port -r request
  				-a	Server address (default is 127.0.0.1)
-				-p	Server listening port (default is 5001)
+				-p	Server listening port
 				-r	Type of request - mem, cpu
 
 	\date		14.11.2018
