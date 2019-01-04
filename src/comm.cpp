@@ -23,23 +23,24 @@
 #include <unistd.h>
 
 
-/*Comm::Comm(commfunc_t _send, commfunc_t _recv):
-		Send(_send),
-		Recv(_recv)
-{
-
-}
-*/
-
+//---------------------------------------------------
+//! Commands definition
 const char *cmd[] = {"cpu", "mem"};
 
+//---------------------------------------------------
+/*
+	\brief	Function sends request to server
 
-
+	\param	_socket	Client's socket descriptor
+			_comm	Passed pointer to buffer
+*/
+//---------------------------------------------------
 int ClientComm(int _socket, char* _buff)
 {
 	bool running = true;
 	int retval = 0;
 
+	// When command is valid then prepare request
 	if(strcmp(_buff, &cmd[Cmd::CPU_UTILIZATION][0]) != 0 &&
 			strcmp(_buff, &cmd[Cmd::MEM_USAGE][0]) != 0)
 	{
@@ -52,6 +53,7 @@ int ClientComm(int _socket, char* _buff)
 		_buff[len++] = '\n';
 		_buff[len] = 0;
 
+		// Number of attempts for send request
 		int attempts = 10;
 		while(running && attempts)
 		{
@@ -60,11 +62,13 @@ int ClientComm(int _socket, char* _buff)
 
 			if(len == -1)
 			{
+				// Send error
 				attempts--;
 				ErrorMessage("send() error: %s", strerror(errno));
 			}
 			else
 			{
+				// Wait for response
 				DebugMessage("It was sent %d bytes, waiting for receive", len);
 				len = recv(_socket, _buff, (BUFF_SIZE - 1), 0);
 
@@ -74,6 +78,7 @@ int ClientComm(int _socket, char* _buff)
 				}
 				else
 				{
+					// Response is received and stored into the buffer
 					_buff[len] = 0;
 					retval = len;
 					running = false;

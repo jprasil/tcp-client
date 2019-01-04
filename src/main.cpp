@@ -6,7 +6,7 @@
  				command line.
 
  	\note		Syntax for execute tcp_client:
- 				tcp_client [-a address]-p port -r request
+ 				tcp_client [-a address] -p port -r request
  				-a	Server address (default is 127.0.0.1)
 				-p	Server listening port
 				-r	Type of request - mem, cpu
@@ -70,6 +70,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		char buffer[BUFF_SIZE];
+		std::fill_n(buffer, BUFF_SIZE, 0);
 		string tmpStr;
 		servAddr.sin_family = AF_INET;
 
@@ -119,87 +120,6 @@ int main(int argc, char* argv[])
 		}
 
 		DebugMessage("Client finished");
-
-/*		char tmpBuff[BUFF_SIZE];
-		string tmpStr;
-		servAddr.sin_family = AF_INET;
-
-		// Read address
-		tmpStr = argMap.at("-a");
-		strcpy(tmpBuff, tmpStr.c_str());
-		if(inet_pton(AF_INET, tmpBuff, &servAddr.sin_addr) <= 0)
-		{
-			if(inet_pton(AF_INET, "127.0.0.1", &servAddr.sin_addr) <= 0)
-			{
-				HandleError("inet_pton() error");
-			}
-		}
-
-		// Read port
-		tmpStr = argMap.at("-p");
-		strcpy(tmpBuff, tmpStr.c_str());
-		servAddr.sin_port = htons(atoi(tmpBuff));
-
-		// Read request
-		tmpStr = argMap.at("-r");
-		StringToLowercase(tmpStr);
-		if(tmpStr.compare("mem") && tmpStr.compare("cpu"))
-		{
-			ErrorMessage("Invalid request command: %s", tmpStr.c_str());
-		}
-		else
-		{
-			strcpy(tmpBuff, tmpStr.c_str());
-
-			int sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-			if(sockfd == -1)
-			{
-				HandleError("socket() error");
-			}
-
-			if(connect(sockfd, reinterpret_cast<sockaddr*>(&servAddr), sizeof(servAddr)) == -1)
-			{
-				HandleError("connect() error");
-			}
-
-			// Prepare request
-			size_t len = strlen(tmpBuff);
-			tmpBuff[len++] = '\n';
-			tmpBuff[len] = 0;
-
-			int attempts = 10;
-			while(running && attempts)
-			{
-				// Send request
-				len = send(sockfd, tmpBuff, len, 0);
-
-				if(len == -1)
-				{
-					attempts--;
-					ErrorMessage("send() error: %s", strerror(errno));
-				}
-				else
-				{
-					DebugMessage("It was send %d bytes, waiting for receive", len);
-					len = recv(sockfd, tmpBuff, BUFF_SIZE, 0);
-					tmpBuff[len] = 0;
-
-					if(len == -1)
-					{
-						HandleError("recv() error");
-					}
-					else
-					{
-						DebugMessage("Receive complete, data: %s length: %d", tmpBuff, len);
-						running = false;
-					}
-
-				}
-			}
-
-			DebugMessage("Client finished");
-		}
-		*/
 	}
 }
 
