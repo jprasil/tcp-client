@@ -111,7 +111,9 @@ int main(int argc, char* argv[])
 
 		int len = ClientComm(sockfd, buffer);
 
-		DebugMessage("Receive complete, data: %s length: %d", buffer, len);
+		// Print response
+		cout << "Receive complete, data: " << buffer << " length: " << len << endl;
+//		DebugMessage("Receive complete, data: %s length: %d", buffer, len);
 
 		if(fcntl(sockfd, F_GETFD) != -1 || errno != EBADF)
 		{

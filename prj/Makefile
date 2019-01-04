@@ -3,8 +3,8 @@ PROJECT_ROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 #Test if BUILD_MODE is defined
 ifndef BUILD_MODE
-BUILD_MODE = debug
-#BUILD_MODE = run
+#BUILD_MODE = debug
+BUILD_MODE = run
 endif
 
 ifeq ($(BUILD_MODE), debug)
